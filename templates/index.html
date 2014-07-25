@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Equation Search</title>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    processEscapes: true
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }
+    });
+    MathJax.Hub.Queue(
+    function () {
+    document.getElementById("math").style.visibility = "";
+    document.getElementById("loading").style.display = "none"
+    });
+  </script>
+  <script type="text/javascript"
+	  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</head>
+
+<body>
+
+<center>
+
+<br/>
+
+<table width="800">
+  <tr>
+    <td><h1>Search with Latex!</h1></td>
+    <td>
+      <form action="/" style="display:inline">
+	<input name="q"
+	       type="text"
+	       size="90"
+	       value="{{request.args['q']}}"/>
+      </form>
+    </td>
+  </tr>
+</table>
+
+{% if request.args.get('q') %}
+<table width="800">
+  <tr>
+    <td width="100"><h3>Results for</h3></td>
+    <td>
+	  <span style="font-size:150%">
+	    ${{request.args['q']}}$
+	  </span>
+    </td>
+  </tr>
+</table>
+{% endif %}
+
+{% if results %}
+<div id="loading">
+  <br/><br/>
+  Loading Results...
+</div>
+
+<br/>
+
+<table id="math" width="800" style="table-layout:fixed;visibility:hidden">
+  {% for doc in results %}
+  <tr>
+    <td width="400" style="font-size:110%"> {{doc['title']}} </td>
+    <td align="left">
+      <a href="{{doc['url']}}">
+	$${{doc['equation']}}$$
+      </a>
+    </td>
+  </tr>
+<!--  <tr><td height="10"/></tr>-->
+  {% endfor %}
+</table>
+<br/><br/>
+
+{% else %}
+<br/><br/>
+No Results.
+{% endif %}
+
+</center>
+
+</body>
+</html>
