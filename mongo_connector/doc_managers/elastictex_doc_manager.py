@@ -1,17 +1,13 @@
 import urllib
 import logging
 from urllib2 import urlopen, Request
-from mongo_connector.doc_managers import DocManagerBase
+from mongo_connector.doc_managers.doc_manager_base import DocManagerBase
 
-
-"""
-con -d ~/coding/equations/mongo_connector/doc_managers/equation_doc_manager.py -t localhost:5000 -m localhost:27017 -n "crawler.data"
-"""
+LOG = logging.getLogger(__name__)
 
 
 class DocManager(DocManagerBase):
     def __init__(self, url=None, **kwargs):
-        print(url)
         self.url = url
         if self.url is None:
             self.url = "localhost:5000"
@@ -25,7 +21,7 @@ class DocManager(DocManagerBase):
         req.add_header("Content-type", "application/octet-stream")
         req.add_data(doc['body'].encode('utf-8'))
         response = urlopen(req)
-        logging.debug(response.read())
+        LOG.info(response.read())
 
     def update(self, doc, update_spec):
         pass

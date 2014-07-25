@@ -1,14 +1,7 @@
 import re
-import pickle
 
 from bs4 import BeautifulSoup
-
-from urllib2 import urlopen
 from urlparse import urlparse
-
-from sympy.parsing.sympy_parser import parse_expr
-from sympy import latex
-
 from elasticsearch import Elasticsearch
 
 

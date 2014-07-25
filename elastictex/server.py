@@ -1,11 +1,13 @@
 #!/usr/bin/env python
-import api
-import atexit
-from flask import Flask
-from flask import request
-from flask import render_template
+from elastictex import api
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
+
+
+def main():
+    api.init()
+    app.run(debug=True)
 
 
 @app.route('/')
@@ -27,6 +29,6 @@ def post():
         api.index(url, request.data)
         return "Indexed %s\n" % url
 
+
 if __name__ == "__main__":
-    api.init()
-    app.run(debug=True)
+    main()
