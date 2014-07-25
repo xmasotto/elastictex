@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# TODO: disallow tag urls
+# TODO: instead of done set and queue_set, just query mongo for existence
+
 import traceback
 import random
 from Queue import Queue
@@ -9,7 +12,6 @@ from urlparse import urlparse
 from pymongo import MongoClient
 from pymongo.errors import AutoReconnect
 
-done = set()
 queue = Queue()
 queue_set = set()
 
@@ -32,14 +34,11 @@ def main():
     else:
         for starter in starters:
             queue.put((starter, 0))
-            queue_set.add(starter)
 
     # Start the crawl loop
-    while queue_set:
+    while not queue.empty():
         (url, level) = queue.get()
-        queue_set.remove(url)
 
-        done.add(url)
         crawl(url, level)
 
 
@@ -51,6 +50,8 @@ def clean_link(link):
     if "ask" in link:
         return None
     if "login" in link:
+        return None
+    if "tagged" in link:
         return None
     if "?" in link:
         link = link.split("?", 1)[0]
@@ -68,13 +69,17 @@ def add_links(url, body, level):
         link = clean_link(link)
         if link:
             full = url_struct.scheme + "://" + url_struct.netloc + link
-            if full not in done and full not in queue_set:
+            if full:
                 queue.put((full, level+1))
-                queue_set.add(full)
 
 
 def crawl(url, level):
     try:
+        doc = data.find({'_id': url}, {'_id': 1})
+        if doc.count() > 0:
+            print("Skipped %s (%d)" % (url, level))
+            return
+
         body = urlopen(url).read()
         add_links(url, body, level)
 
