@@ -8,15 +8,16 @@ except ImportError:
     from setuptools import setup
 
 setup(name="elastictex",
-      version="0.1",
+      version="0.1.0",
       description="Search with Latex",
       author="Xander Masotto",
       author_email="xmasotto@gmail.com",
+      url="http://github.com/xmasotto/elastictex",
       packages=["elastictex",
                 "mongo_connector",
                 "mongo_connector.doc_managers"],
       package_data={
-          'elastictex': ['templates/*']
+          'elastictex': ['templates/index.html']
       },
       install_requires=["elasticsearch", "flask"],
       entry_points={
